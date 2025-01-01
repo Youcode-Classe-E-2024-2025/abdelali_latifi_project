@@ -1,9 +1,33 @@
+<?php
+require_once '../backoffice/authentication.php'; 
+    session_start();
+
+$login = new Login();
+if (isset($_POST['submit'])) {
+    $username = htmlspecialchars(trim($_POST['username']));
+    $password = htmlspecialchars(trim($_POST['password']));
+
+    $result = $login->login($username, $password);
+    if ($result === 1) {
+        $_SESSION['login'] = true;
+        $_SESSION['id'] = $login->idUser();
+        header('Location: ./home.php');
+        exit();
+    } elseif ($result === 10) {
+        $error = "Incorrect password.";
+    } elseif ($result === 100) {
+        $error = "User not found.";
+    } else {
+        $error = "An unknown error occurred.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Improved Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-fixed bg-gray-100 min-h-screen">
@@ -33,6 +57,9 @@
             <input type="submit" value="Log In" name="submit"
                 class="w-full p-3 mt-4 font-bold text-white bg-violet-600 rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400">
         </form>
+        <?php if (isset($error)): ?>
+            <div class="text-red-600 mt-4"><?php echo $error; ?></div>
+        <?php endif; ?>
     </section>
 </body>
 

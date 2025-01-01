@@ -3,27 +3,27 @@ require '../backoffice/config/connexion.php';
 
 class Register extends Database {
 
-    public function registration($name, $email, $password, $confirmPassword) {
-        $conn = $this->getConnection();
+    public function registrartion($name, $email, $password, $confermpassword) {
+        $conn = $this->getConnection(); 
 
-        if ($password !== $confirmPassword) {
-            return "Les mots de passe ne correspondent pas.";
+        if ($password !== $confermpassword) {
+            return 100; 
         }
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE name = :name OR email = :email");
+        $stmt = $conn->prepare("SELECT * FROM Users WHERE name = :name OR email = :email");
         $stmt->execute(['name' => $name, 'email' => $email]);
-
+        
         if ($stmt->rowCount() > 0) {
-            return "Le nom d'utilisateur ou l'email existe déjà.";
+            return 10; 
         }
 
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash) VALUES (:name, :email, :password_hash)");
-        if ($stmt->execute(['name' => $name, 'email' => $email, 'password_hash' => $hashedPassword])) {
-            return "Enregistrement réussi.";
+        $stmt = $conn->prepare("INSERT INTO Users (name, email, password) VALUES (:name, :email, :password)");
+        if ($stmt->execute(['name' => $name, 'email' => $email, 'password' => $hashedPassword])) {
+            return 1; 
         } else {
-            return "Une erreur est survenue lors de l'enregistrement.";
+            return 500; 
         }
     }
 }
@@ -32,21 +32,21 @@ class Login extends Database {
     private $id;
 
     public function login($name, $password) {
-        $conn = $this->getConnection();
+        $conn = $this->getConnection(); 
 
-        $stmt = $conn->prepare("SELECT * FROM users WHERE name = :name");
+        $stmt = $conn->prepare("SELECT * FROM Users WHERE name = :name");
         $stmt->execute(['name' => $name]);
 
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch();
             if (password_verify($password, $row["password_hash"])) {
-                $this->id = $row["user_id"];
-                return "Connexion réussie.";
+                $this->id = $row["id"];
+                return 1; 
             } else {
-                return "Mot de passe incorrect.";
+                return 10; 
             }
         } else {
-            return "Nom d'utilisateur non trouvé.";
+            return 100; 
         }
     }
 
