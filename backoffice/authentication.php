@@ -3,7 +3,7 @@ require '../backoffice/config/connexion.php';
 
 class Register extends Database {
 
-    public function registrartion($name, $email, $password, $confermpassword) {
+    public function registration($name, $email, $password, $confermpassword) {
         $conn = $this->getConnection(); 
 
         if ($password !== $confermpassword) {
@@ -19,7 +19,7 @@ class Register extends Database {
 
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $stmt = $conn->prepare("INSERT INTO Users (name, email, password) VALUES (:name, :email, :password)");
+        $stmt = $conn->prepare("INSERT INTO Users (name, email, password_hash) VALUES (:name, :email, :password)");
         if ($stmt->execute(['name' => $name, 'email' => $email, 'password' => $hashedPassword])) {
             return 1; 
         } else {

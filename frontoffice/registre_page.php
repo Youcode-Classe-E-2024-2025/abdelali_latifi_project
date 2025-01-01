@@ -10,19 +10,24 @@ if (isset($_POST['submit'])) {
     $password = htmlspecialchars(trim($_POST['password']));
     $confirmPassword = htmlspecialchars(trim($_POST['confermpassword']));
 
-    $result = $register->registrartion($name, $email, $password, $confirmPassword);
-
-    if ($result == 1) {
-        $message = "Registration successful!";
-    } elseif ($result == 10) {
-        $message = "Name or Email has already been taken.";
-    } elseif ($result == 100) {
-        $message = "Passwords do not match.";
+    if (empty($name) || empty($email) || empty($password) || empty($confirmPassword)) {
+        $message = "All fields are required.";
     } else {
-        $message = "An unknown error occurred.";
+        $result = $register->registration($name, $email, $password, $confirmPassword);
+
+        if ($result == 1) {
+            $message = "Registration successful!";
+        } elseif ($result == 10) {
+            $message = "Name or Email has already been taken.";
+        } elseif ($result == 100) {
+            $message = "Passwords do not match.";
+        } else {
+            $message = "An unknown error occurred.";
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,26 +61,22 @@ if (isset($_POST['submit'])) {
             <div>
                 <label for="name" class="block text-xl font-bold text-gray-700">Name</label>
                 <input id="name" name="name" type="text" placeholder="Enter name"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <div>
                 <label for="email" class="block text-xl font-bold text-gray-700">Email</label>
                 <input id="email" name="email" type="email" placeholder="Enter your email"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <div>
                 <label for="password" class="block text-xl font-bold text-gray-700">Password</label>
                 <input id="password" name="password" type="password" placeholder="Enter your password"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <div>
                 <label for="confermpassword" class="block text-xl font-bold text-gray-700">Confirm Password</label>
                 <input id="confermpassword" name="confermpassword" type="password" placeholder="Confirm your password"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <button type="submit" name="submit"
                 class="w-full p-3 mt-4 font-bold text-white bg-violet-600 rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400">

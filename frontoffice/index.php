@@ -1,27 +1,40 @@
 <?php
 require_once '../backoffice/authentication.php'; 
-    session_start();
+session_start();
 
 $login = new Login();
+$error = '';
+
 if (isset($_POST['submit'])) {
     $username = htmlspecialchars(trim($_POST['username']));
     $password = htmlspecialchars(trim($_POST['password']));
 
-    $result = $login->login($username, $password);
-    if ($result === 1) {
-        $_SESSION['login'] = true;
-        $_SESSION['id'] = $login->idUser();
-        header('Location: ./home.php');
-        exit();
-    } elseif ($result === 10) {
-        $error = "Incorrect password.";
-    } elseif ($result === 100) {
-        $error = "User not found.";
+    if (empty($username) || empty($password)) {
+        $error = "All fields are required.";
     } else {
-        $error = "An unknown error occurred.";
+        try {
+            $result = $login->login($username, $password);
+
+            if ($result === 1) {
+                $_SESSION['login'] = true;
+                $_SESSION['id'] = $login->idUser();
+                header('Location: ./home.php');
+                exit();
+            } elseif ($result === 10) {
+                $error = "Incorrect password.";
+            } elseif ($result === 100) {
+                $error = "User not found.";
+            } else {
+                $error = "An unknown error occurred.";
+            }
+        } catch (Exception $e) {
+            error_log("Login error: " . $e->getMessage());
+            $error = "A server error occurred. Please try again later.";
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,14 +58,12 @@ if (isset($_POST['submit'])) {
             <div>
                 <label for="username" class="block text-xl font-bold text-gray-700">Name</label>
                 <input id="username" name="username" type="text" placeholder="Enter your name"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <div>
                 <label for="password" class="block text-xl font-bold text-gray-700">Password</label>
                 <input id="password" name="password" type="password" placeholder="Enter your password"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    required>
+                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-violet-500">
             </div>
             <input type="submit" value="Log In" name="submit"
                 class="w-full p-3 mt-4 font-bold text-white bg-violet-600 rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400">
