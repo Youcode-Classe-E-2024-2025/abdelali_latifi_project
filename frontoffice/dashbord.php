@@ -30,7 +30,27 @@ $tasks = $projectManager->getAllTasks();
 <body class="bg-gray-100 font-sans">
     <header class="bg-violet-600 text-white p-4">
         <div class="container mx-auto">
-            <h1 class="text-2xl font-bold">Project Dashboard</h1>
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Project Dashboard</h1>
+                <div class="flex space-x-4">
+                    <button onclick="openModal('addProjectModal')" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Add Project
+                        </span>
+                    </button>
+                    <button onclick="openModal('addTaskModal')" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Add Task
+                        </span>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -144,5 +164,107 @@ $tasks = $projectManager->getAllTasks();
             </div>
         </section>
     </main>
+
+    <!-- Add Project Modal -->
+    <div id="addProjectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-[90%] md:w-[500px] shadow-lg rounded-lg bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Add New Project</h3>
+                <button onclick="closeModal('addProjectModal')" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="../backoffice/controlers.php/project.php" method="POST" class="space-y-4">
+                <input type="hidden" name="action" value="create_project">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Project Name</label>
+                    <input type="text" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Visibility</label>
+                    <select name="is_public" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                        <option value="0">Private</option>
+                        <option value="1">Public</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('addProjectModal')" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700">
+                        Create Project
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-[90%] md:w-[500px] shadow-lg rounded-lg bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Add New Task</h3>
+                <button onclick="closeModal('addTaskModal')" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="../backoffice/controlers.php/project.php" method="POST" class="space-y-4">
+                <input type="hidden" name="action" value="create_task">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Task Title</label>
+                    <input type="text" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Project</label>
+                    <select name="project_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                        <?php foreach ($projects as $project): ?>
+                            <option value="<?= $project['project_id'] ?>"><?= htmlspecialchars($project['name'] ?? '') ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Assigned To</label>
+                    <select name="assigned_to" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                        <?php foreach ($users as $user): ?>
+                            <option value="<?= $user['user_id'] ?>"><?= htmlspecialchars($user['name'] ?? '') ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Due Date</label>
+                    <input type="date" name="due_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('addTaskModal')" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700">
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../frontoffice/javascript/dashbord.js"></script>
 </body>
 </html>
