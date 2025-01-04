@@ -223,7 +223,7 @@ $tasks = $projectManager->getAllTasks();
                     <label class="block text-sm font-medium text-gray-700">Project</label>
                     <select name="project_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
                         <?php foreach ($projects as $project): ?>
-                            <option value="<?= $project['project_id'] ?>"><?= htmlspecialchars($project['name'] ?? '') ?></option>
+                            <option value="<?= $project['project_id'] ?>"><?= htmlspecialchars($project['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -233,9 +233,10 @@ $tasks = $projectManager->getAllTasks();
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Assigned To</label>
-                    <select name="assigned_to" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                    <select name="assigned_to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500">
+                        <option value="">Select User</option>
                         <?php foreach ($users as $user): ?>
-                            <option value="<?= $user['user_id'] ?>"><?= htmlspecialchars($user['name'] ?? '') ?></option>
+                            <option value="<?= $user['user_id'] ?>"><?= htmlspecialchars($user['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -251,13 +252,9 @@ $tasks = $projectManager->getAllTasks();
                         <option value="completed">Completed</option>
                     </select>
                 </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('addTaskModal')" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700">
-                        Create Task
-                    </button>
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button type="button" onclick="closeModal('addTaskModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md">Create Task</button>
                 </div>
             </form>
         </div>

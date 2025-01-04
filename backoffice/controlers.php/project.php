@@ -67,12 +67,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $name = $_POST['name'];
                 $description = $_POST['description'] ?? '';
                 $is_public = isset($_POST['is_public']) ? 1 : 0;
-                $created_by = $_SESSION['user_id'] ?? 1; // Fallback to 1 if no session
+                $created_by = $_SESSION['user_id'] ?? 1;
 
                 if ($projectManager->createProject($name, $description, $is_public, $created_by)) {
                     header('Location: ../../frontoffice/dashbord.php?success=project_created');
                 } else {
                     header('Location: ../../frontoffice/dashbord.php?error=project_creation_failed');
+                }
+                exit;
+                break;
+
+            case 'create_task':
+                $title = $_POST['title'];
+                $project_id = $_POST['project_id'];
+                $description = $_POST['description'] ?? '';
+                $assigned_to = $_POST['assigned_to'] ?? null;
+                $due_date = $_POST['due_date'] ?? null;
+                $status = $_POST['status'] ?? 'todo';
+
+                if ($projectManager->createTask($title, $project_id, $description, $assigned_to, $due_date, $status)) {
+                    header('Location: ../../frontoffice/dashbord.php?success=task_created');
+                } else {
+                    header('Location: ../../frontoffice/dashbord.php?error=task_creation_failed');
                 }
                 exit;
                 break;
