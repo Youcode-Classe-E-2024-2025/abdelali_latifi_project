@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <h1 class="text-2xl font-bold">My Dashboard</h1>
                 <div class="space-x-4">
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'User'); ?></span>
-                    <a href="logout.php" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100">Logout</a>
+                    <a href="../backoffice/logout.php" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100">Logout</a>
                 </div>
             </div>
         </div>

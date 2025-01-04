@@ -38,21 +38,20 @@ class Login extends Database {
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch();
             if (password_verify($password, $row["password_hash"])) {
-                // Démarrer la session et stocker les informations de l'utilisateur
                 session_start();
                 $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['role'] = $row['role'];
                 
-                // Rediriger vers home.php
+                
                 header('Location: ../frontoffice/home.php');
                 exit;
             } else {
-                return 10; // Mot de passe incorrect
+                return 10; 
             }
         } else {
-            return 100; // Utilisateur non trouvé
+            return 100; 
         }
     }
 }
