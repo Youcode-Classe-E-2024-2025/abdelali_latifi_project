@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../backoffice/config/connexion.php';
 require_once '../backoffice/controlers.php/user.php';
 require_once '../backoffice/controlers.php/project.php';
@@ -176,7 +177,7 @@ $tasks = $projectManager->getAllTasks();
                     </svg>
                 </button>
             </div>
-            <form action="../backoffice/controlers.php/project.php" method="POST" class="space-y-4">
+            <form id="addProjectForm" action="../backoffice/controlers.php/project.php" method="POST" class="space-y-4">
                 <input type="hidden" name="action" value="create_project">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Project Name</label>
@@ -193,13 +194,9 @@ $tasks = $projectManager->getAllTasks();
                         <option value="1">Public</option>
                     </select>
                 </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="closeModal('addProjectModal')" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-violet-600 hover:bg-violet-700">
-                        Create Project
-                    </button>
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button type="button" onclick="closeModal('addProjectModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md">Create Project</button>
                 </div>
             </form>
         </div>
@@ -265,6 +262,78 @@ $tasks = $projectManager->getAllTasks();
             </form>
         </div>
     </div>
+    <script>
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+
+    function submitProjectForm(event) {
+        event.preventDefault();
+        
+        if (!validateProjectForm()) {
+            return false;
+        }
+
+        const form = document.getElementById('addProjectForm');
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data.includes('success')) {
+                alert('Project created successfully!');
+                window.location.reload();
+            } else {
+                alert('Failed to create project. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+
+        return false;
+    }
+
+    function validateProjectForm() {
+        const nameInput = document.querySelector('input[name="name"]');
+        const nameError = document.getElementById('nameError');
+        
+        if (nameInput.value.trim() === '') {
+            nameError.textContent = 'Project name is required';
+            nameError.classList.remove('hidden');
+            return false;
+        }
+        
+        if (nameInput.value.length < 3) {
+            nameError.textContent = 'Project name must be at least 3 characters long';
+            nameError.classList.remove('hidden');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Afficher les messages de succès ou d'erreur
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        const error = urlParams.get('error');
+        
+        if (success === 'project_created') {
+            alert('Project created successfully!');
+        } else if (error === 'project_creation_failed') {
+            alert('Failed to create project. Please try again.');
+        }
+    });
+    </script>
     <script src="../frontoffice/javascript/dashbord.js"></script>
 </body>
 </html>

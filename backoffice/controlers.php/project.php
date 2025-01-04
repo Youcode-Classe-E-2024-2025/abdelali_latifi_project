@@ -61,40 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = $db->getConnection();
     $projectManager = new Project($conn);
 
-    $action = $_POST['action'] ?? '';
+    if (isset($_POST['action'])) {
+        switch ($_POST['action']) {
+            case 'create_project':
+                $name = $_POST['name'];
+                $description = $_POST['description'] ?? '';
+                $is_public = isset($_POST['is_public']) ? 1 : 0;
+                $created_by = $_SESSION['user_id'] ?? 1; // Fallback to 1 if no session
 
-    switch ($action) {
-        case 'create_project':
-            if (isset($_SESSION['user_id'])) {
-                $created = $projectManager->createProject(
-                    $_POST['name'],
-                    $_POST['description'],
-                    $_POST['is_public'],
-                    $_SESSION['user_id']
-                );
-                if ($created) {
+                if ($projectManager->createProject($name, $description, $is_public, $created_by)) {
                     header('Location: ../../frontoffice/dashbord.php?success=project_created');
                 } else {
                     header('Location: ../../frontoffice/dashbord.php?error=project_creation_failed');
                 }
-            }
-            break;
-
-        case 'create_task':
-            $created = $projectManager->createTask(
-                $_POST['title'],
-                $_POST['project_id'],
-                $_POST['description'],
-                $_POST['assigned_to'],
-                $_POST['due_date'],
-                $_POST['status']
-            );
-            if ($created) {
-                header('Location: ../../frontoffice/dashbord.php?success=task_created');
-            } else {
-                header('Location: ../../frontoffice/dashbord.php?error=task_creation_failed');
-            }
-            break;
+                exit;
+                break;
+        }
     }
-    exit();
 }
