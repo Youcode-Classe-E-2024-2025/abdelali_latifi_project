@@ -27,6 +27,7 @@ $tasks = $projectManager->getAllTasks();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="javascript/dashboard.js" defer></script>
 </head>
 <body class="bg-gray-100 font-sans">
     <header class="bg-violet-600 text-white p-4">
@@ -34,7 +35,7 @@ $tasks = $projectManager->getAllTasks();
             <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Project Dashboard</h1>
                 <div class="flex space-x-4">
-                    <button onclick="openModal('addProjectModal')" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
+                    <button id="addProjectButton" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
                         <span class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -42,7 +43,7 @@ $tasks = $projectManager->getAllTasks();
                             Add Project
                         </span>
                     </button>
-                    <button onclick="openModal('addTaskModal')" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
+                    <button id="addTaskButton" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
                         <span class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -171,7 +172,7 @@ $tasks = $projectManager->getAllTasks();
         <div class="relative top-20 mx-auto p-5 border w-[90%] md:w-[500px] shadow-lg rounded-lg bg-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Add New Project</h3>
-                <button onclick="closeModal('addProjectModal')" class="text-gray-500 hover:text-gray-700">
+                <button id="closeAddProjectModal" class="text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -195,7 +196,7 @@ $tasks = $projectManager->getAllTasks();
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 mt-4">
-                    <button type="button" onclick="closeModal('addProjectModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="button" id="cancelAddProject" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
                     <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md">Create Project</button>
                 </div>
             </form>
@@ -207,7 +208,7 @@ $tasks = $projectManager->getAllTasks();
         <div class="relative top-20 mx-auto p-5 border w-[90%] md:w-[500px] shadow-lg rounded-lg bg-white">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Add New Task</h3>
-                <button onclick="closeModal('addTaskModal')" class="text-gray-500 hover:text-gray-700">
+                <button id="closeAddTaskModal" class="text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -253,84 +254,11 @@ $tasks = $projectManager->getAllTasks();
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 mt-4">
-                    <button type="button" onclick="closeModal('addTaskModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="button" id="cancelAddTask" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
                     <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 rounded-md">Create Task</button>
                 </div>
             </form>
         </div>
     </div>
-    <script>
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.remove('hidden');
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
-    }
-
-    function submitProjectForm(event) {
-        event.preventDefault();
-        
-        if (!validateProjectForm()) {
-            return false;
-        }
-
-        const form = document.getElementById('addProjectForm');
-        const formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes('success')) {
-                alert('Project created successfully!');
-                window.location.reload();
-            } else {
-                alert('Failed to create project. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-
-        return false;
-    }
-
-    function validateProjectForm() {
-        const nameInput = document.querySelector('input[name="name"]');
-        const nameError = document.getElementById('nameError');
-        
-        if (nameInput.value.trim() === '') {
-            nameError.textContent = 'Project name is required';
-            nameError.classList.remove('hidden');
-            return false;
-        }
-        
-        if (nameInput.value.length < 3) {
-            nameError.textContent = 'Project name must be at least 3 characters long';
-            nameError.classList.remove('hidden');
-            return false;
-        }
-        
-        return true;
-    }
-
-    // Afficher les messages de succès ou d'erreur
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const success = urlParams.get('success');
-        const error = urlParams.get('error');
-        
-        if (success === 'project_created') {
-            alert('Project created successfully!');
-        } else if (error === 'project_creation_failed') {
-            alert('Failed to create project. Please try again.');
-        }
-    });
-    </script>
-    <script src="../frontoffice/javascript/dashbord.js"></script>
 </body>
 </html>
