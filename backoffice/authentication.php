@@ -29,8 +29,6 @@ class Register extends Database {
 }
 
 class Login extends Database {
-    private $id;
-
     public function login($name, $password) {
         $conn = $this->getConnection(); 
 
@@ -40,18 +38,22 @@ class Login extends Database {
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch();
             if (password_verify($password, $row["password_hash"])) {
-                $this->id = $row["id"];
-                return 1; 
+                // Démarrer la session et stocker les informations de l'utilisateur
+                session_start();
+                $_SESSION['user_id'] = $row['user_id'];
+                $_SESSION['name'] = $row['name'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
+                
+                // Rediriger vers home.php
+                header('Location: ../frontoffice/home.php');
+                exit;
             } else {
-                return 10; 
+                return 10; // Mot de passe incorrect
             }
         } else {
-            return 100; 
+            return 100; // Utilisateur non trouvé
         }
-    }
-
-    public function idUser() {
-        return $this->id;
     }
 }
 ?>

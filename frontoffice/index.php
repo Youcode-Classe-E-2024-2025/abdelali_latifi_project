@@ -14,18 +14,12 @@ if (isset($_POST['submit'])) {
     } else {
         try {
             $result = $login->login($username, $password);
-
-            if ($result === 1) {
-                $_SESSION['login'] = true;
-                $_SESSION['id'] = $login->idUser();
-                header('Location: ./home.php');
-                exit();
-            } elseif ($result === 10) {
+            // La redirection est maintenant gérée dans la méthode login
+            // Si nous arrivons ici, c'est qu'il y a eu une erreur
+            if ($result === 10) {
                 $error = "Incorrect password.";
             } elseif ($result === 100) {
                 $error = "User not found.";
-            } else {
-                $error = "An unknown error occurred.";
             }
         } catch (Exception $e) {
             error_log("Login error: " . $e->getMessage());

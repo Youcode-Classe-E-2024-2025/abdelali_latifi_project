@@ -79,6 +79,39 @@ class Project {
         $stmt->bindParam(':is_public', $is_public);
         return $stmt->execute();
     }
+
+    public function getProjectsForUser($user_id) {
+        $query = "SELECT p.*, u.name as creator_name 
+                 FROM projects p 
+                 LEFT JOIN users u ON p.created_by = u.user_id 
+                 LEFT JOIN project_members pm ON p.project_id = pm.project_id 
+                 WHERE pm.user_id = :user_id OR p.created_by = :user_id 
+                 ORDER BY p.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTasksForUser($user_id) {
+        $query = "SELECT t.*, p.name as project_name 
+                 FROM tasks t 
+                 LEFT JOIN projects p ON t.project_id = p.project_id 
+                 WHERE t.assigned_to = :user_id 
+                 ORDER BY t.due_date ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateTaskStatus($task_id, $new_status) {
+        $query = "UPDATE tasks SET status = :status WHERE task_id = :task_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':status', $new_status);
+        $stmt->bindParam(':task_id', $task_id);
+        return $stmt->execute();
+    }
 }
 
 // Handle POST requests
