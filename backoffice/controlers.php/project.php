@@ -114,14 +114,20 @@ class Project {
     }
 }
 
-// Handle POST requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../config/connexion.php';
-    session_start();
+require_once __DIR__ . '/../config/connexion.php';
 
-    $db = new Database();
-    $conn = $db->getConnection();
-    $projectManager = new Project($conn);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$db = new Database();
+$conn = $db->getConnection();
+$projectManager = new Project($conn);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($projectManager)) {
+        die('Error: $projectManager is not initialized.');
+    }
 
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
@@ -141,6 +147,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
 
+            case 'create_task':
+                if (isset($_POST['title'], $_POST['project_id'], $_POST['description'], $_POST['assigned_to'], $_POST['due_date'], $_POST['status'])) {
+                    if ($projectManager->createTask(
+                        $_POST['title'],
+                        $_POST['project_id'],
+                        $_POST['description'],
+                        $_POST['assigned_to'],
+                        $_POST['due_date'],
+                        $_POST['status']
+                    )) {
+                        header('Location: ../../frontoffice/dashbord.php?success=task_created');
+                    } else {
+                        header('Location: ../../frontoffice/dashbord.php?error=task_creation_failed');
+                    }
+                } else {
+                    header('Location: ../../frontoffice/dashbord.php?error=missing_task_data');
+                }
+                break;
+
             case 'update_task_status':
                 if (isset($_POST['task_id'], $_POST['new_status'])) {
                     if ($projectManager->updateTaskStatus($_POST['task_id'], $_POST['new_status'])) {
@@ -152,5 +177,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
         }
     }
-    exit;
 }
