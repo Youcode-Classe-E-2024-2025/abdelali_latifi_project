@@ -50,13 +50,42 @@ class Project {
         $stmt->bindParam(':status', $status);
         return $stmt->execute();
     }
+
+    public function deleteProject($project_id) {
+        $query = "DELETE FROM projects WHERE project_id = :project_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $project_id);
+        return $stmt->execute();
+    }
+
+    public function getProjectById($project_id) {
+        $query = "SELECT * FROM projects WHERE project_id = :project_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $project_id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateProject($project_id, $name, $description, $is_public) {
+        $query = "UPDATE projects 
+                 SET name = :name, 
+                     description = :description, 
+                     is_public = :is_public 
+                 WHERE project_id = :project_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':project_id', $project_id);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':is_public', $is_public);
+        return $stmt->execute();
+    }
 }
 
 // Handle POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once '../config/connexion.php';
     session_start();
-    
+
     $db = new Database();
     $conn = $db->getConnection();
     $projectManager = new Project($conn);
@@ -92,6 +121,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 exit;
                 break;
+
+            case 'update_project':
+                if (isset($_POST['project_id'], $_POST['name'], $_POST['description'])) {
+                    $is_public = isset($_POST['is_public']) ? 1 : 0;
+                    if ($projectManager->updateProject(
+                        $_POST['project_id'],
+                        $_POST['name'],
+                        $_POST['description'],
+                        $is_public
+                    )) {
+                        header('Location: ../../frontoffice/dashbord.php?success=project_updated');
+                    } else {
+                        header('Location: ../../frontoffice/dashbord.php?error=project_update_failed');
+                    }
+                }
+                break;
+
+            case 'delete_project':
+                if (isset($_POST['project_id'])) {
+                    if ($projectManager->deleteProject($_POST['project_id'])) {
+                        header('Location: ../../frontoffice/dashbord.php?success=project_deleted');
+                    } else {
+                        header('Location: ../../frontoffice/dashbord.php?error=project_deletion_failed');
+                    }
+                }
+                break;
         }
     }
+    exit;
 }
