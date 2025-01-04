@@ -3,7 +3,6 @@ session_start();
 require_once '../backoffice/config/connexion.php';
 require_once '../backoffice/controlers.php/project.php';
 
-// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
@@ -13,11 +12,9 @@ $db = new Database();
 $conn = $db->getConnection();
 $projectManager = new Project($conn);
 
-// Récupérer les projets et tâches de l'utilisateur
 $userProjects = $projectManager->getProjectsForUser($_SESSION['user_id']);
 $userTasks = $projectManager->getTasksForUser($_SESSION['user_id']);
 
-// Gérer la mise à jour du statut des tâches
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_task_status') {
     if (isset($_POST['task_id'], $_POST['new_status'])) {
         $projectManager->updateTaskStatus($_POST['task_id'], $_POST['new_status']);
@@ -49,38 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </header>
 
     <main class="container mx-auto p-6">
-        <!-- Mes Projets -->
-        <section class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">My Projects</h2>
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($userProjects as $project): ?>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4"><?php echo htmlspecialchars($project['name']); ?></td>
-                            <td class="px-6 py-4"><?php echo htmlspecialchars($project['description']); ?></td>
-                            <td class="px-6 py-4"><?php echo htmlspecialchars($project['creator_name']); ?></td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 text-sm rounded-full <?php echo $project['is_public'] ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'; ?>">
-                                    <?php echo $project['is_public'] ? 'Public' : 'Private'; ?>
-                                </span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Mes Tâches -->
+ <!-- Mes Tâches -->
         <section>
             <h2 class="text-xl font-semibold mb-4">My Tasks</h2>
             <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -114,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <form action="home.php" method="POST" class="inline">
+                                <form action="../backoffice/controlers.php/project.php" method="POST" class="inline">
                                     <input type="hidden" name="action" value="update_task_status">
                                     <input type="hidden" name="task_id" value="<?php echo $task['task_id']; ?>">
                                     <select name="new_status" onchange="this.form.submit()" 

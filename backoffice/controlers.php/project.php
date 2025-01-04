@@ -116,7 +116,7 @@ class Project {
 
 // Handle POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once '../config/connexion.php';
+    require_once __DIR__ . '/../config/connexion.php';
     session_start();
 
     $db = new Database();
@@ -126,57 +126,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'create_project':
-                $name = $_POST['name'];
-                $description = $_POST['description'] ?? '';
-                $is_public = isset($_POST['is_public']) ? 1 : 0;
-                $created_by = $_SESSION['user_id'] ?? 1;
-
-                if ($projectManager->createProject($name, $description, $is_public, $created_by)) {
-                    header('Location: ../../frontoffice/dashbord.php?success=project_created');
-                } else {
-                    header('Location: ../../frontoffice/dashbord.php?error=project_creation_failed');
-                }
-                exit;
-                break;
-
-            case 'create_task':
-                $title = $_POST['title'];
-                $project_id = $_POST['project_id'];
-                $description = $_POST['description'] ?? '';
-                $assigned_to = $_POST['assigned_to'] ?? null;
-                $due_date = $_POST['due_date'] ?? null;
-                $status = $_POST['status'] ?? 'todo';
-
-                if ($projectManager->createTask($title, $project_id, $description, $assigned_to, $due_date, $status)) {
-                    header('Location: ../../frontoffice/dashbord.php?success=task_created');
-                } else {
-                    header('Location: ../../frontoffice/dashbord.php?error=task_creation_failed');
-                }
-                exit;
-                break;
-
-            case 'update_project':
-                if (isset($_POST['project_id'], $_POST['name'], $_POST['description'])) {
+                if (isset($_POST['name'], $_POST['description'])) {
                     $is_public = isset($_POST['is_public']) ? 1 : 0;
-                    if ($projectManager->updateProject(
-                        $_POST['project_id'],
+                    if ($projectManager->createProject(
                         $_POST['name'],
                         $_POST['description'],
-                        $is_public
+                        $is_public,
+                        $_SESSION['user_id']
                     )) {
-                        header('Location: ../../frontoffice/dashbord.php?success=project_updated');
+                        header('Location: ../../frontoffice/dashbord.php?success=project_created');
                     } else {
-                        header('Location: ../../frontoffice/dashbord.php?error=project_update_failed');
+                        header('Location: ../../frontoffice/dashbord.php?error=project_creation_failed');
                     }
                 }
                 break;
 
-            case 'delete_project':
-                if (isset($_POST['project_id'])) {
-                    if ($projectManager->deleteProject($_POST['project_id'])) {
-                        header('Location: ../../frontoffice/dashbord.php?success=project_deleted');
+            case 'update_task_status':
+                if (isset($_POST['task_id'], $_POST['new_status'])) {
+                    if ($projectManager->updateTaskStatus($_POST['task_id'], $_POST['new_status'])) {
+                        header('Location: ../../frontoffice/home.php?success=task_updated');
                     } else {
-                        header('Location: ../../frontoffice/dashbord.php?error=project_deletion_failed');
+                        header('Location: ../../frontoffice/home.php?error=task_update_failed');
                     }
                 }
                 break;
