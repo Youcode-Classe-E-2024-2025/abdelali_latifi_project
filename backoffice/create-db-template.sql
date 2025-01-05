@@ -90,3 +90,13 @@ INSERT INTO task_status_updates (task_id, updated_by, old_status, new_status) VA
 (4, 4, 'todo', 'in_progress');
 
 
+
+SELECT DISTINCT role FROM users;
+
+UPDATE users SET role = 'member' WHERE role = 'guest';
+
+ALTER TABLE users MODIFY role ENUM('member', 'admin') DEFAULT 'member';
+
+
+
+

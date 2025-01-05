@@ -26,15 +26,4 @@ class User
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
-    public function updateUser($id, $name, $email, $role)
-    {
-        $query = "UPDATE users SET name = :name, email = :email, role = :role WHERE user_id = :id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
-    }
 }

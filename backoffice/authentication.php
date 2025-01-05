@@ -30,7 +30,7 @@ class Register extends Database {
 
 class Login extends Database {
     public function login($name, $password) {
-        $conn = $this->getConnection(); 
+        $conn = $this->getConnection();
 
         $stmt = $conn->prepare("SELECT * FROM Users WHERE name = :name");
         $stmt->execute(['name' => $name]);
@@ -43,16 +43,21 @@ class Login extends Database {
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['role'] = $row['role'];
-                
-                
-                header('Location: ../frontoffice/home.php');
+
+                if ($row['role'] === 'admin') {
+                    header('Location: ../frontoffice/dashbord.php');
+                } else {
+                    header('Location: ../frontoffice/home.php');
+                }
                 exit;
             } else {
-                return 10; 
+                return 10; // Mot de passe incorrect
             }
         } else {
-            return 100; 
+            return 100; // Utilisateur introuvable
         }
     }
 }
+
+
 ?>

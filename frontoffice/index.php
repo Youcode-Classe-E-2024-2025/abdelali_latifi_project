@@ -14,8 +14,7 @@ if (isset($_POST['submit'])) {
     } else {
         try {
             $result = $login->login($username, $password);
-            // La redirection est maintenant gérée dans la méthode login
-            // Si nous arrivons ici, c'est qu'il y a eu une erreur
+           
             if ($result === 10) {
                 $error = "Incorrect password.";
             } elseif ($result === 100) {
@@ -65,6 +64,7 @@ if (isset($_POST['submit'])) {
         <?php if (isset($error)): ?>
             <div class="text-red-600 mt-4"><?php echo $error; ?></div>
         <?php endif; ?>
+        <a href="login_project_members"></a>
     </section>
 </body>
 
