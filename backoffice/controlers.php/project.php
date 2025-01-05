@@ -147,6 +147,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 break;
 
+                case 'delete_project':
+                    if (isset($_POST['project_id'])) {
+                        if ($projectManager->deleteProject($_POST['project_id'])) {
+                            header('Location: ../../frontoffice/dashbord.php?success=project_deleted');
+                        } else {
+                            header('Location: ../../frontoffice/dashbord.php?error=project_deletion_failed');
+                        }
+                    }
+                    break;                   
+
             case 'create_task':
                 if (isset($_POST['title'], $_POST['project_id'], $_POST['description'], $_POST['assigned_to'], $_POST['due_date'], $_POST['status'])) {
                     if ($projectManager->createTask(
@@ -165,6 +175,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header('Location: ../../frontoffice/dashbord.php?error=missing_task_data');
                 }
                 break;
+
+                case 'update_project':
+                    if (isset($_POST['project_id'], $_POST['name'], $_POST['description'], $_POST['is_public'])) {
+                        $is_public = $_POST['is_public'] == "1" ? 1 : 0; 
+                        if ($projectManager->updateProject(
+                            $_POST['project_id'],
+                            $_POST['name'],
+                            $_POST['description'],
+                            $is_public
+                        )) {
+                            header('Location: ../../frontoffice/dashbord.php?success=project_updated');
+                        } else {
+                            header('Location: ../../frontoffice/dashbord.php?error=project_update_failed');
+                        }
+                    } else {
+                        header('Location: ../../frontoffice/dashbord.php?error=missing_project_data');
+                    }
+                    break;                
 
             case 'update_task_status':
                 if (isset($_POST['task_id'], $_POST['new_status'])) {
