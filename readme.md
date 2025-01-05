@@ -41,13 +41,6 @@ Le dossier **frontoffice** contient les fichiers destinés à l'interface utilis
 
 ---
 
-## Prérequis
-
-1. Serveur local (par exemple : XAMPP, WAMP, ou MAMP).
-2. PHP version 7.4 ou supérieure.
-3. Base de données MySQL.
-
----
 
 ## Installation
 
