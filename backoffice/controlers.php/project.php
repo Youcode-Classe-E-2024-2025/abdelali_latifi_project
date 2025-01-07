@@ -125,10 +125,6 @@ $conn = $db->getConnection();
 $projectManager = new Project($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($projectManager)) {
-        die('Error: $projectManager is not initialized.');
-    }
-
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'create_project':

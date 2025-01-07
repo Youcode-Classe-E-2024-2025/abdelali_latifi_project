@@ -42,11 +42,12 @@ class Login extends Database {
                 $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];
-                $_SESSION['role'] = $row['role'];
 
                 if ($row['role'] === 'admin') {
+                    $_SESSION['role'] = 'admin';
                     header('Location: ../frontoffice/dashbord.php');
                 } else {
+                    $_SESSION['role'] = 'user';
                     header('Location: ../frontoffice/home.php');
                 }
                 exit;

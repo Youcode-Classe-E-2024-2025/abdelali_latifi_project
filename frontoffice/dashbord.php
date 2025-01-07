@@ -4,6 +4,8 @@ require_once '../backoffice/config/connexion.php';
 require_once '../backoffice/controlers.php/user.php';
 require_once '../backoffice/controlers.php/project.php';
 
+!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin' ? header(header: 'Location: index.php') :'';
+
 $db = new Database();
 $conn = $db->getConnection();
 $userManager = new User($conn);

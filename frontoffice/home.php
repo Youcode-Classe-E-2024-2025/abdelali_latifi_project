@@ -4,7 +4,7 @@ require_once '../backoffice/config/connexion.php';
 require_once '../backoffice/controlers.php/project.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header(header: 'Location: index.php');
     exit;
 }
 
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <?php foreach ($userTasks as $task): ?>
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4"><?php echo htmlspecialchars($task['title']); ?></td>
-                            <td class="px-6 py-4"><?php echo htmlspecialchars($task['project_name']); ?></td>
+                            <td class="px-6 py-4"><?php echo $task['project_name']; ?></td>
                             <td class="px-6 py-4"><?php echo date('Y-m-d', strtotime($task['due_date'])); ?></td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-sm rounded-full 
