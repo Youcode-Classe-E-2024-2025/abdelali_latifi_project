@@ -37,28 +37,36 @@ class Login extends Database {
 
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch();
+
             if (password_verify($password, $row["password_hash"])) {
                 session_start();
                 $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['name'] = $row['name'];
                 $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role']; 
 
-                if ($row['role'] === 'admin') {
-                    $_SESSION['role'] = 'admin';
-                    header('Location: ../frontoffice/dashbord.php');
-                } else {
-                    $_SESSION['role'] = 'user';
-                    header('Location: ../frontoffice/home.php');
+                switch ($row['role']) {
+                    case 'admin':
+                        header('Location: ../frontoffice/dashbord.php');
+                        break;
+                    case 'team_member': 
+                        header('Location: ../frontoffice/guest.php');
+                        break;
+                    default:
+                        header('Location: ../frontoffice/home.php');
+                        break;
                 }
+
                 exit;
             } else {
-                return 10; // Mot de passe incorrect
+                return 10; 
             }
         } else {
-            return 100; // Utilisateur introuvable
+            return 100; 
         }
     }
 }
+
 
 
 ?>

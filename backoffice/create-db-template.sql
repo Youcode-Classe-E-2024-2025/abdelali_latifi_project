@@ -97,6 +97,31 @@ UPDATE users SET role = 'member' WHERE role = 'guest';
 
 ALTER TABLE users MODIFY role ENUM('member', 'admin') DEFAULT 'member';
 
+ALTER TABLE users
+MODIFY role ENUM('member', 'admin', 'team_member') DEFAULT 'member';
+
+
+UPDATE Users
+SET role = 'guest'
+WHERE role = 'member_team';
+
+
+UPDATE Users SET role = 'guest' WHERE role = 'member_team';
+
+SELECT * FROM Users where role = 'member_team';
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
