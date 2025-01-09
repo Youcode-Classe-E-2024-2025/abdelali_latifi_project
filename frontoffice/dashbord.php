@@ -30,6 +30,7 @@ $tasks = $projectManager->getAllTasks();
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="javascript/dashboard.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100 font-sans">
     <header class="bg-violet-600 text-white p-4">
@@ -59,33 +60,54 @@ $tasks = $projectManager->getAllTasks();
     </header>
 
     <main class="container mx-auto p-6">
-        <section id="users" class="mb-8">
-            <h2 class="text-xl font-semibold mb-4">Users</h2>
-            <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                <table class="min-w-full table-auto">
-                    <thead class="bg-gray-200 text-left">
-                        <tr>
-                            <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Email</th>
-                            <th class="px-4 py-2">Role</th>
-                            <th class="px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($users as $user): ?>
-                        <tr class="border-t">
-                            <td class="px-4 py-2"><?= $user['name']?></td>
-                            <td class="px-4 py-2"><?= $user['email'] ?></td>
-                            <td class="px-4 py-2"><?= $user['role']?></td>
-                            <td class="px-4 py-2 flex space-x-2">
-                                <a href="?delete_id=<?= urlencode($user['user_id']) ?>" onclick="return confirm('Are you sure?');" class="bg-red-600 text-white px-2 py-1 rounded">Delete</a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    <section id="users" class="mb-8">
+    <h2 class="text-xl font-semibold mb-4">Users</h2>
+    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table class="min-w-full table-auto">
+            <thead class="bg-gray-200 text-left">
+                <tr>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Email</th>
+                    <th class="px-4 py-2">Role</th>
+                    <th class="px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                <tr class="border-t">
+                    <td class="px-4 py-2"><?= htmlspecialchars($user['name']) ?></td>
+                    <td class="px-4 py-2"><?= htmlspecialchars($user['email']) ?></td>
+                    <td class="px-4 py-2"><?= htmlspecialchars($user['role']) ?></td>
+                    <td class="px-4 py-2 flex space-x-2">
+                        <a href="#" class="bg-red-600 text-white px-2 py-1 rounded" 
+                           onclick="confirmDelete(<?= $user['user_id'] ?>)">Delete</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+    function confirmDelete(userId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the delete URL
+                window.location.href = `?delete_id=${userId}`;
+            }
+        });
+    }
+</script>
+
 
         <!-- Projects Section -->
         <section id="projects" class="mb-8">
