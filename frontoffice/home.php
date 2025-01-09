@@ -3,10 +3,8 @@ session_start();
 require_once '../backoffice/config/connexion.php';
 require_once '../backoffice/controlers.php/project.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header(header: 'Location: index.php');
-    exit;
-}
+!isset($_SESSION['role']) || $_SESSION['role'] !== 'member' ? header('Location: index.php') : '';
+
 
 $db = new Database();
 $conn = $db->getConnection();
