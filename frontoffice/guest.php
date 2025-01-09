@@ -27,9 +27,7 @@ $tasks = $projectManager->getAllTasks();
             <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Guest Dashboard</h1>
                 <div class="flex space-x-4">
-                    <a href="logout.php" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100 transition-colors duration-200">
-                        Logout
-                    </a>
+                <a href="../backoffice/logout.php" class="bg-white text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-100">Logout</a>                    
                 </div>
             </div>
         </div>
