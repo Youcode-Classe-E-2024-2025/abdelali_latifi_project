@@ -101,14 +101,11 @@ $tasks = $projectManager->getAllTasks();
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirect to the delete URL
                 window.location.href = `?delete_id=${userId}`;
             }
         });
     }
 </script>
-
-
         <!-- Projects Section -->
         <section id="projects" class="mb-8">
             <h2 class="text-xl font-semibold mb-4">Projects</h2>

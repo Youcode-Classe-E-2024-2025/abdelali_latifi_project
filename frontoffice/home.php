@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100">
     <header class="bg-violet-600 text-white p-4">
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </header>
 
     <main class="container mx-auto p-6">
- <!-- Mes Tâches -->
+        <!-- Mes Tâches -->
         <section>
             <h2 class="text-xl font-semibold mb-4">My Tasks</h2>
             <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -100,7 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <script>
         // Vérifier les messages de succès/erreur
         <?php if (isset($_GET['success']) && $_GET['success'] === 'task_updated'): ?>
-        alert('Task status updated successfully!');
+        Swal.fire({
+            title: 'Success!',
+            text: 'Task status updated successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
         <?php endif; ?>
     </script>
 </body>
