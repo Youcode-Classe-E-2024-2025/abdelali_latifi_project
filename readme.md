@@ -9,19 +9,23 @@ Ce projet est une application web permettant de gérer des **projets** et des **
 
 ### Backoffice
 Le dossier **backoffice** contient les fichiers nécessaires à la gestion administrative du système.
+
 - **config/connexion.php** : Fichier de connexion à la base de données.
 - **controllers/project.php** : Classe permettant de manipuler les données des projets et des tâches (CRUD).
 - **database/authentication.php** : Gestion des sessions et de l'authentification.
 - **database/create-db-template.php** : Script SQL pour la création des tables de la base de données.
 - **logout.php** : Script pour la déconnexion d'un utilisateur.
+- **request_team_member.php** : Insertion des demandes pour devenir membre dans la base de données.
 
 ### Frontoffice
 Le dossier **frontoffice** contient les fichiers destinés à l'interface utilisateur.
+
 - **javascript/dashboard.js** : Script JavaScript gérant les fonctionnalités du tableau de bord utilisateur.
 - **dashboard.php** : Page principale du tableau de bord des utilisateurs connectés.
 - **home.php** : Page d'accueil du site.
 - **index.php** : Point d'entrée principal du site web.
 - **registre_page.php** : Page d'inscription pour les nouveaux utilisateurs.
+- **guest.php** : Page des invités pour voir les projets publics et envoyer une demande pour devenir membre.
 
 ---
 
@@ -40,7 +44,6 @@ Le dossier **frontoffice** contient les fichiers destinés à l'interface utilis
 - **Tâches d'un utilisateur** : Voir les tâches assignées à un utilisateur spécifique.
 
 ---
-
 
 ## Installation
 
