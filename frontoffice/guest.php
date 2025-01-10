@@ -20,6 +20,8 @@ $tasks = $projectManager->getAllTasks();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guest Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.js"></script>
 </head>
 <body class="bg-gray-100 font-sans">
     <header class="bg-violet-600 text-white p-4">
@@ -62,7 +64,15 @@ $tasks = $projectManager->getAllTasks();
                 </table>
             </div>
         </section>
-    </main>
 
+        <section id="request-member" class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Request to Become a Team Member</h2>
+            <form action="../backoffice/controlers.php/request_team_member.php" method="POST">
+                <label for="message" class="block text-sm font-medium text-gray-700">Why do you want to become a team member?</label>
+                <textarea id="message" name="message" rows="4" class="mt-1 p-2 w-full border border-gray-300 rounded-md" required></textarea>
+                <button type="submit" class="mt-4 bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700">Send Request</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

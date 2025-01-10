@@ -110,8 +110,15 @@ UPDATE Users SET role = 'guest' WHERE role = 'member_team';
 
 SELECT * FROM Users where role = 'member_team';
 
+use project ;
 
-
+CREATE TABLE membership_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
 
